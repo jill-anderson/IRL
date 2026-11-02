@@ -1,0 +1,47 @@
+{
+  "TableName": "IRL-Users-dev",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "email",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST",
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "EmailIndex",
+      "KeySchema": [
+        {
+          "AttributeName": "email",
+          "KeyType": "HASH"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      }
+    }
+  ],
+  "StreamSpecification": {
+    "StreamEnabled": false
+  },
+  "Tags": [
+    {
+      "Key": "Environment",
+      "Value": "dev"
+    },
+    {
+      "Key": "Application",
+      "Value": "IRL-Dating-App"
+    }
+  ]
+}

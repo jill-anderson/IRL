@@ -1,0 +1,571 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreateLocation($filter: ModelSubscriptionLocationFilterInput) {
+  onCreateLocation(filter: $filter) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateLocation($filter: ModelSubscriptionLocationFilterInput) {
+  onUpdateLocation(filter: $filter) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteLocation($filter: ModelSubscriptionLocationFilterInput) {
+  onDeleteLocation(filter: $filter) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $owner: String
+) {
+  onCreateUser(filter: $filter, owner: $owner) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnUpdateUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $owner: String
+) {
+  onUpdateUser(filter: $filter, owner: $owner) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnDeleteUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $owner: String
+) {
+  onDeleteUser(filter: $filter, owner: $owner) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnCreateCheckIn(
+  $filter: ModelSubscriptionCheckInFilterInput
+  $owner: String
+) {
+  onCreateCheckIn(filter: $filter, owner: $owner) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+subscription OnUpdateCheckIn(
+  $filter: ModelSubscriptionCheckInFilterInput
+  $owner: String
+) {
+  onUpdateCheckIn(filter: $filter, owner: $owner) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+subscription OnDeleteCheckIn(
+  $filter: ModelSubscriptionCheckInFilterInput
+  $owner: String
+) {
+  onDeleteCheckIn(filter: $filter, owner: $owner) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+subscription OnCreateConversation(
+  $filter: ModelSubscriptionConversationFilterInput
+  $participant1Id: String
+  $participant2Id: String
+) {
+  onCreateConversation(
+    filter: $filter
+    participant1Id: $participant1Id
+    participant2Id: $participant2Id
+  ) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateConversation(
+  $filter: ModelSubscriptionConversationFilterInput
+  $participant1Id: String
+  $participant2Id: String
+) {
+  onUpdateConversation(
+    filter: $filter
+    participant1Id: $participant1Id
+    participant2Id: $participant2Id
+  ) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteConversation(
+  $filter: ModelSubscriptionConversationFilterInput
+  $participant1Id: String
+  $participant2Id: String
+) {
+  onDeleteConversation(
+    filter: $filter
+    participant1Id: $participant1Id
+    participant2Id: $participant2Id
+  ) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderId: String
+  $recipientId: String
+) {
+  onCreateMessage(
+    filter: $filter
+    senderId: $senderId
+    recipientId: $recipientId
+  ) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}
+
+subscription OnUpdateMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderId: String
+  $recipientId: String
+) {
+  onUpdateMessage(
+    filter: $filter
+    senderId: $senderId
+    recipientId: $recipientId
+  ) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}
+
+subscription OnDeleteMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderId: String
+  $recipientId: String
+) {
+  onDeleteMessage(
+    filter: $filter
+    senderId: $senderId
+    recipientId: $recipientId
+  ) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}

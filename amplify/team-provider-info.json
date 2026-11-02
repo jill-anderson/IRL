@@ -1,0 +1,32 @@
+{
+  "irl": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-irl-irl-c7aea-authRole",
+      "UnauthRoleArn": "arn:aws:iam::233645807962:role/amplify-irl-irl-c7aea-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::233645807962:role/amplify-irl-irl-c7aea-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-irl-irl-c7aea-deployment",
+      "UnauthRoleName": "amplify-irl-irl-c7aea-unauthRole",
+      "StackName": "amplify-irl-irl-c7aea",
+      "StackId": "arn:aws:cloudformation:us-west-2:233645807962:stack/amplify-irl-irl-c7aea/27edc6c0-06ce-11f1-9d2b-0a6c3dcf9f13",
+      "AmplifyAppId": "dfcc4x9mwsygu"
+    },
+    "categories": {
+      "auth": {
+        "irlab425c30": {}
+      },
+      "function": {
+        "checkInProcessor": {
+          "deploymentBucketName": "amplify-irl-irl-c7aea-deployment",
+          "s3Key": "amplify-builds/checkInProcessor-52596f477a3359665475-build.zip"
+        }
+      },
+      "api": {
+        "amplifyDatasource": {}
+      },
+      "storage": {
+        "profilePhotos": {}
+      }
+    }
+  }
+}

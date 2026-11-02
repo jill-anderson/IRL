@@ -1,0 +1,4 @@
+## Map userId to id for GraphQL response
+#set($result = $ctx.result)
+#set($result.id = $result.userId)
+$util.toJson($result)

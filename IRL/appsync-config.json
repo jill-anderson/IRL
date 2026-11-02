@@ -1,0 +1,49 @@
+{
+  "api": {
+    "plugins": {
+      "awsAPIPlugin": {
+        "IRL": {
+          "endpointType": "GraphQL",
+          "endpoint": "https://rg7qwnvijfadrgshcmgypgstxa.appsync-api.us-east-1.amazonaws.com/graphql",
+          "region": "us-east-1",
+          "authorizationType": "AMAZON_COGNITO_USER_POOLS"
+        }
+      }
+    }
+  },
+  "auth": {
+    "plugins": {
+      "awsCognitoAuthPlugin": {
+        "UserAgent": "aws-amplify-cli/0.1.0",
+        "Version": "0.1.0",
+        "IdentityManager": {
+          "Default": {}
+        },
+        "CredentialsProvider": {
+          "CognitoIdentity": {
+            "Default": {
+              "PoolId": "us-east-1:REPLACE_WITH_IDENTITY_POOL",
+              "Region": "us-east-1"
+            }
+          }
+        },
+        "CognitoUserPool": {
+          "Default": {
+            "PoolId": "us-east-1_7TtWmWL5z",
+            "AppClientId": "5dudrrdq4uvmek08c087ejpc2o",
+            "Region": "us-east-1"
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "plugins": {
+      "awsS3StoragePlugin": {
+        "bucket": "irl-dating-app-storage",
+        "region": "us-east-1",
+        "defaultAccessLevel": "guest"
+      }
+    }
+  }
+}

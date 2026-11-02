@@ -1,0 +1,34 @@
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "userId": $util.dynamodb.toDynamoDBJson($ctx.args.input.id)
+  },
+  "attributeValues": {
+    "userId": $util.dynamodb.toDynamoDBJson($ctx.args.input.id),
+    "email": $util.dynamodb.toDynamoDBJson($ctx.args.input.email),
+    "username": $util.dynamodb.toDynamoDBJson($ctx.args.input.username),
+    "displayName": $util.dynamodb.toDynamoDBJson($ctx.args.input.displayName),
+    "gender": $util.dynamodb.toDynamoDBJson($ctx.args.input.gender),
+    "locationPrivacy": $util.dynamodb.toDynamoDBJson($ctx.args.input.locationPrivacy),
+    "birthDate": $util.dynamodb.toDynamoDBJson($ctx.args.input.birthDate),
+    "createdAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
+    "updatedAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
+    "lastActiveAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601())
+    #if($ctx.args.input.interestedIn)
+    ,"interestedIn": $util.dynamodb.toDynamoDBJson($ctx.args.input.interestedIn)
+    #end
+    #if($ctx.args.input.jobTitle)
+    ,"jobTitle": $util.dynamodb.toDynamoDBJson($ctx.args.input.jobTitle)
+    #end
+    #if($ctx.args.input.religiousAffiliation)
+    ,"religiousAffiliation": $util.dynamodb.toDynamoDBJson($ctx.args.input.religiousAffiliation)
+    #end
+    #if($ctx.args.input.profilePhotoUrl)
+    ,"profilePhotoUrl": $util.dynamodb.toDynamoDBJson($ctx.args.input.profilePhotoUrl)
+    #end
+    #if($ctx.args.input.galleryPhotoUrls)
+    ,"galleryPhotoUrls": $util.dynamodb.toDynamoDBJson($ctx.args.input.galleryPhotoUrls)
+    #end
+  }
+}

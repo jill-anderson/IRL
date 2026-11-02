@@ -1,0 +1,77 @@
+#set($expNames = {})
+#set($expValues = {})
+#set($expSet = [])
+#set($expRemove = [])
+
+## Build update expression dynamically
+#if($ctx.args.input.displayName)
+  $util.qr($expSet.add("#displayName = :displayName"))
+  $util.qr($expNames.put("#displayName", "displayName"))
+  $util.qr($expValues.put(":displayName", $util.dynamodb.toDynamoDB($ctx.args.input.displayName)))
+#end
+
+#if($ctx.args.input.bio)
+  $util.qr($expSet.add("#bio = :bio"))
+  $util.qr($expNames.put("#bio", "bio"))
+  $util.qr($expValues.put(":bio", $util.dynamodb.toDynamoDB($ctx.args.input.bio)))
+#end
+
+#if($ctx.args.input.gender)
+  $util.qr($expSet.add("#gender = :gender"))
+  $util.qr($expNames.put("#gender", "gender"))
+  $util.qr($expValues.put(":gender", $util.dynamodb.toDynamoDB($ctx.args.input.gender)))
+#end
+
+#if($ctx.args.input.interestedIn)
+  $util.qr($expSet.add("#interestedIn = :interestedIn"))
+  $util.qr($expNames.put("#interestedIn", "interestedIn"))
+  $util.qr($expValues.put(":interestedIn", $util.dynamodb.toDynamoDB($ctx.args.input.interestedIn)))
+#end
+
+#if($ctx.args.input.jobTitle)
+  $util.qr($expSet.add("#jobTitle = :jobTitle"))
+  $util.qr($expNames.put("#jobTitle", "jobTitle"))
+  $util.qr($expValues.put(":jobTitle", $util.dynamodb.toDynamoDB($ctx.args.input.jobTitle)))
+#end
+
+#if($ctx.args.input.religiousAffiliation)
+  $util.qr($expSet.add("#religiousAffiliation = :religiousAffiliation"))
+  $util.qr($expNames.put("#religiousAffiliation", "religiousAffiliation"))
+  $util.qr($expValues.put(":religiousAffiliation", $util.dynamodb.toDynamoDB($ctx.args.input.religiousAffiliation)))
+#end
+
+#if($ctx.args.input.locationPrivacy)
+  $util.qr($expSet.add("#locationPrivacy = :locationPrivacy"))
+  $util.qr($expNames.put("#locationPrivacy", "locationPrivacy"))
+  $util.qr($expValues.put(":locationPrivacy", $util.dynamodb.toDynamoDB($ctx.args.input.locationPrivacy)))
+#end
+
+#if($ctx.args.input.profilePhotoUrl)
+  $util.qr($expSet.add("#profilePhotoUrl = :profilePhotoUrl"))
+  $util.qr($expNames.put("#profilePhotoUrl", "profilePhotoUrl"))
+  $util.qr($expValues.put(":profilePhotoUrl", $util.dynamodb.toDynamoDB($ctx.args.input.profilePhotoUrl)))
+#end
+
+#if($ctx.args.input.galleryPhotoUrls)
+  $util.qr($expSet.add("#galleryPhotoUrls = :galleryPhotoUrls"))
+  $util.qr($expNames.put("#galleryPhotoUrls", "galleryPhotoUrls"))
+  $util.qr($expValues.put(":galleryPhotoUrls", $util.dynamodb.toDynamoDB($ctx.args.input.galleryPhotoUrls)))
+#end
+
+## Always update updatedAt
+$util.qr($expSet.add("#updatedAt = :updatedAt"))
+$util.qr($expNames.put("#updatedAt", "updatedAt"))
+$util.qr($expValues.put(":updatedAt", $util.dynamodb.toDynamoDB($util.time.nowISO8601())))
+
+{
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "userId": $util.dynamodb.toDynamoDBJson($ctx.args.input.id)
+  },
+  "update": {
+    "expression": "SET ${expSet.toString().replace('[','').replace(']','')}",
+    "expressionNames": $util.toJson($expNames),
+    "expressionValues": $util.toJson($expValues)
+  }
+}

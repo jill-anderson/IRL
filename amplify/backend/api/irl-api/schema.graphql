@@ -1,0 +1,338 @@
+# IRL Dating App - GraphQL Schema
+# This schema defines all data types, queries, mutations, and subscriptions for the app
+
+# ============================================
+# User Management
+# ============================================
+
+type User @model @auth(rules: [
+  { allow: owner, ownerField: "id", operations: [read, update, delete] },
+  { allow: public, operations: [read], provider: iam }
+]) {
+  id: ID!
+  email: AWSEmail! @index(name: "byEmail")
+  username: String! @index(name: "byUsername")
+  displayName: String!
+  bio: String
+  profilePhotoKey: String
+  profilePhotoUrl: AWSURL
+  birthDate: AWSDate!
+  gender: Gender!
+  interestedIn: [Gender!]!
+  locationPrivacy: LocationPrivacy!
+  notificationPreferences: NotificationPreferences
+  lastActiveAt: AWSDateTime!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
+  # Relationships
+  checkIns: [CheckIn] @hasMany(indexName: "byUser", fields: ["id"])
+  sentMessages: [Message] @hasMany(indexName: "bySender", fields: ["id"])
+  receivedMessages: [Message] @hasMany(indexName: "byRecipient", fields: ["id"])
+}
+
+type NotificationPreferences {
+  checkInNotifications: Boolean!
+  messageNotifications: Boolean!
+  pushEnabled: Boolean!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  OTHER
+}
+
+enum LocationPrivacy {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+# ============================================
+# Location Management
+# ============================================
+
+type Location @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, provider: iam, operations: [create, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  type: LocationType!
+  address: String!
+  latitude: Float!
+  longitude: Float!
+  geofenceId: String! @index(name: "byGeofenceId")
+  radius: Float!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
+  # Relationships
+  checkIns: [CheckIn] @hasMany(indexName: "byLocation", fields: ["id"])
+}
+
+enum LocationType {
+  BAR
+  RESTAURANT
+  CAFE
+  CLUB
+}
+
+# ============================================
+# Check-In Management
+# ============================================
+
+type CheckIn @model @auth(rules: [
+  { allow: owner, ownerField: "userId", operations: [read, update, delete] },
+  { allow: public, operations: [read], provider: iam }
+]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["checkInTime"])
+  locationId: ID! @index(name: "byLocation", sortKeyFields: ["checkInTime"])
+  checkInTime: AWSDateTime!
+  checkOutTime: AWSDateTime
+  status: CheckInStatus! @index(name: "byStatus", sortKeyFields: ["checkInTime"])
+  autoCheckIn: Boolean!
+  ttl: Int
+
+  # Relationships
+  user: User @belongsTo(fields: ["userId"])
+  location: Location @belongsTo(fields: ["locationId"])
+}
+
+enum CheckInStatus {
+  ACTIVE
+  CHECKED_OUT
+  EXPIRED
+}
+
+# ============================================
+# Messaging
+# ============================================
+
+type Conversation @model @auth(rules: [
+  { allow: owner, ownerField: "participant1Id", operations: [read, update] },
+  { allow: owner, ownerField: "participant2Id", operations: [read, update] }
+]) {
+  id: ID!
+  participant1Id: ID! @index(name: "byParticipant1", sortKeyFields: ["updatedAt"])
+  participant2Id: ID! @index(name: "byParticipant2", sortKeyFields: ["updatedAt"])
+  participant1Name: String!
+  participant2Name: String!
+  participant1Photo: String
+  participant2Photo: String
+  lastMessageText: String
+  lastMessageTime: AWSDateTime
+  lastMessageSender: String
+  unreadCount1: Int!
+  unreadCount2: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
+  # Relationships
+  messages: [Message] @hasMany(indexName: "byConversation", fields: ["id"])
+}
+
+type Message @model @auth(rules: [
+  { allow: owner, ownerField: "senderId", operations: [create, read] },
+  { allow: owner, ownerField: "recipientId", operations: [read, update] }
+]) {
+  id: ID!
+  conversationId: ID! @index(name: "byConversation", sortKeyFields: ["timestamp"])
+  senderId: ID! @index(name: "bySender", sortKeyFields: ["timestamp"])
+  recipientId: ID! @index(name: "byRecipient", sortKeyFields: ["timestamp"])
+  content: String!
+  timestamp: AWSDateTime!
+  status: MessageStatus!
+  ttl: Int
+
+  # Relationships
+  conversation: Conversation @belongsTo(fields: ["conversationId"])
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+# ============================================
+# Custom Queries
+# ============================================
+
+type Query {
+  # Get all active users at a specific location
+  getUsersAtLocation(locationId: ID!, limit: Int): [User]
+    @function(name: "getUsersAtLocation-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Get nearby locations based on coordinates
+  getNearbyLocations(latitude: Float!, longitude: Float!, radius: Float!, limit: Int): [Location]
+    @function(name: "getNearbyLocations-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Search locations by name or type
+  searchLocations(query: String!, type: LocationType, limit: Int): [Location]
+    @function(name: "searchLocations-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Get active check-in for current user
+  getMyActiveCheckIn: CheckIn
+    @function(name: "getMyActiveCheckIn-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Get user's check-in history
+  getMyCheckInHistory(limit: Int, nextToken: String): CheckInConnection
+    @function(name: "getMyCheckInHistory-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+}
+
+type CheckInConnection {
+  items: [CheckIn]
+  nextToken: String
+}
+
+# ============================================
+# Custom Mutations
+# ============================================
+
+type Mutation {
+  # Automatic check-in triggered by geofence entry
+  autoCheckIn(locationId: ID!): CheckIn
+    @function(name: "checkInProcessor-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Manual check-in at a location
+  manualCheckIn(locationId: ID!): CheckIn
+    @function(name: "checkInProcessor-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Check-out from current location
+  checkOut: CheckIn
+    @function(name: "checkOutProcessor-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Send a message to another user
+  sendMessage(recipientId: ID!, content: String!): MessagePayload
+    @function(name: "messageProcessor-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Mark messages as read
+  markMessagesAsRead(conversationId: ID!): Conversation
+    @function(name: "markMessagesAsRead-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+
+  # Update device position for location tracking
+  updateDevicePosition(latitude: Float!, longitude: Float!): UpdatePositionResult
+    @function(name: "updateDevicePosition-${env}")
+    @auth(rules: [{ allow: private, provider: userPools }])
+}
+
+type MessagePayload {
+  message: Message
+  conversation: Conversation
+}
+
+type UpdatePositionResult {
+  success: Boolean!
+  nearbyLocations: [Location]
+}
+
+# ============================================
+# Subscriptions (Real-time Updates)
+# ============================================
+
+type Subscription {
+  # Subscribe to new check-ins at a specific location
+  onCheckInAtLocation(locationId: ID!): CheckIn
+    @aws_subscribe(mutations: ["autoCheckIn", "manualCheckIn"])
+
+  # Subscribe to check-outs at a specific location
+  onCheckOutAtLocation(locationId: ID!): CheckIn
+    @aws_subscribe(mutations: ["checkOut"])
+
+  # Subscribe to new messages in a conversation
+  onNewMessage(conversationId: ID!): Message
+    @aws_subscribe(mutations: ["sendMessage"])
+
+  # Subscribe to conversation updates for a specific user
+  onConversationUpdate(userId: ID!): Conversation
+    @aws_subscribe(mutations: ["sendMessage", "markMessagesAsRead"])
+
+  # Subscribe to user profile updates
+  onUserUpdate(userId: ID!): User
+    @aws_subscribe(mutations: ["updateUser"])
+}
+
+# ============================================
+# Additional Types for Lambda Responses
+# ============================================
+
+type GeofenceEvent {
+  eventType: String!
+  locationId: ID!
+  userId: ID!
+  timestamp: AWSDateTime!
+  latitude: Float!
+  longitude: Float!
+}
+
+# ============================================
+# Input Types for Complex Operations
+# ============================================
+
+input CreateLocationInput {
+  name: String!
+  type: LocationType!
+  address: String!
+  latitude: Float!
+  longitude: Float!
+  radius: Float
+}
+
+input UpdateUserInput {
+  displayName: String
+  bio: String
+  gender: Gender
+  interestedIn: [Gender!]
+  locationPrivacy: LocationPrivacy
+  notificationPreferences: NotificationPreferencesInput
+}
+
+input NotificationPreferencesInput {
+  checkInNotifications: Boolean
+  messageNotifications: Boolean
+  pushEnabled: Boolean
+}
+
+input LocationFilterInput {
+  type: LocationType
+  radiusInMeters: Float
+  userCount: Int
+}
+
+# ============================================
+# Pagination Types
+# ============================================
+
+type UserConnection {
+  items: [User]
+  nextToken: String
+}
+
+type LocationConnection {
+  items: [Location]
+  nextToken: String
+}
+
+type ConversationConnection {
+  items: [Conversation]
+  nextToken: String
+}
+
+type MessageConnection {
+  items: [Message]
+  nextToken: String
+}

@@ -1,0 +1,173 @@
+# GraphQL Schema for IRL Dating App
+
+type User @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  email: String! @index(name: "byEmail", queryField: "getUserByEmail")
+  username: String!
+  displayName: String!
+  bio: String
+  profilePhotoKey: String
+  profilePhotoUrl: String
+  galleryPhotoUrls: [String]
+  birthDate: AWSDateTime!
+  gender: Gender!
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  locationPrivacy: LocationPrivacy!
+  notificationPreferences: NotificationPreferences
+  lastActiveAt: AWSDateTime!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  checkIns: [CheckIn] @hasMany(indexName: "byUser", fields: ["id"])
+  sentMessages: [Message] @hasMany(indexName: "bySender", fields: ["id"])
+  receivedMessages: [Message] @hasMany(indexName: "byRecipient", fields: ["id"])
+}
+
+type NotificationPreferences {
+  checkInNotifications: Boolean!
+  messageNotifications: Boolean!
+  pushEnabled: Boolean!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+  OTHER
+}
+
+enum LocationPrivacy {
+  PUBLIC
+  FRIENDS_ONLY
+  PRIVATE
+}
+
+type Location @model {
+  id: ID!
+  name: String!
+  type: LocationType!
+  address: String!
+  latitude: Float!
+  longitude: Float!
+  geofenceId: String
+  radius: Int!
+  checkIns: [CheckIn] @hasMany(indexName: "byLocation", fields: ["id"])
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum LocationType {
+  BAR
+  RESTAURANT
+  CAFE
+  CLUB
+  OTHER
+}
+
+type CheckIn @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  locationId: ID! @index(name: "byLocation")
+  user: User @belongsTo(fields: ["userId"])
+  location: Location @belongsTo(fields: ["locationId"])
+  checkInTime: AWSDateTime!
+  checkOutTime: AWSDateTime
+  status: CheckInStatus!
+  autoCheckIn: Boolean!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum CheckInStatus {
+  ACTIVE
+  CHECKED_OUT
+  EXPIRED
+}
+
+type Conversation @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  participant1Id: ID! @index(name: "byParticipant1")
+  participant2Id: ID! @index(name: "byParticipant2")
+  participant1: User @belongsTo(fields: ["participant1Id"])
+  participant2: User @belongsTo(fields: ["participant2Id"])
+  lastMessageText: String
+  lastMessageTime: AWSDateTime
+  unreadCount1: Int!
+  unreadCount2: Int!
+  messages: [Message] @hasMany(indexName: "byConversation", fields: ["id"])
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Message @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  conversationId: ID! @index(name: "byConversation")
+  senderId: ID! @index(name: "bySender")
+  recipientId: ID! @index(name: "byRecipient")
+  conversation: Conversation @belongsTo(fields: ["conversationId"])
+  sender: User @belongsTo(fields: ["senderId"])
+  recipient: User @belongsTo(fields: ["recipientId"])
+  content: String!
+  timestamp: AWSDateTime!
+  status: MessageStatus!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+# Custom Queries
+type Query {
+  getUsersAtLocation(locationId: ID!): [User]
+  getNearbyLocations(latitude: Float!, longitude: Float!, radius: Int!): [Location]
+}
+
+# Custom Mutations
+type Mutation {
+  createUserProfile(input: CreateUserProfileInput!): User
+  updateUserProfile(input: UpdateUserProfileInput!): User
+  autoCheckIn(locationId: ID!): CheckIn
+  autoCheckOut: CheckIn
+}
+
+# Custom Subscriptions
+type Subscription {
+  onCheckInAtLocation(locationId: ID!): CheckIn
+    @aws_subscribe(mutations: ["autoCheckIn"])
+  onCheckOutAtLocation(locationId: ID!): CheckIn
+    @aws_subscribe(mutations: ["autoCheckOut"])
+  onNewMessage(conversationId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+}
+
+# Input Types
+input CreateUserProfileInput {
+  email: String!
+  displayName: String!
+  gender: Gender!
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  profilePhotoUrl: String
+  galleryPhotoUrls: [String]
+  birthDate: AWSDateTime!
+}
+
+input UpdateUserProfileInput {
+  id: ID!
+  displayName: String
+  bio: String
+  gender: Gender
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  locationPrivacy: LocationPrivacy
+  profilePhotoUrl: String
+  galleryPhotoUrls: [String]
+}

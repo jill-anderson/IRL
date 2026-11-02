@@ -1,0 +1,95 @@
+# Amplify-Compatible IRL Dating App Schema
+
+type User @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  email: AWSEmail!
+  username: String!
+  displayName: String!
+  bio: String
+  profilePhotoUrl: AWSURL
+  birthDate: AWSDate!
+  gender: Gender!
+  locationPrivacy: LocationPrivacy!
+  lastActiveAt: AWSDateTime!
+  checkIns: [CheckIn] @hasMany
+}
+
+type Location @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  type: LocationType!
+  address: String!
+  latitude: Float!
+  longitude: Float!
+  geofenceId: String!
+  radius: Float!
+  checkIns: [CheckIn] @hasMany
+}
+
+type CheckIn @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  userId: ID!
+  locationId: ID!
+  checkInTime: AWSDateTime!
+  checkOutTime: AWSDateTime
+  status: CheckInStatus!
+  autoCheckIn: Boolean!
+  user: User @belongsTo
+  location: Location @belongsTo
+}
+
+type Conversation @model @auth(rules: [{allow: owner, ownerField: "participant1Id"}, {allow: owner, ownerField: "participant2Id"}]) {
+  id: ID!
+  participant1Id: ID!
+  participant2Id: ID!
+  participant1Name: String!
+  participant2Name: String!
+  lastMessageText: String
+  lastMessageTime: AWSDateTime
+  unreadCount1: Int!
+  unreadCount2: Int!
+  messages: [Message] @hasMany
+}
+
+type Message @model @auth(rules: [{allow: owner, ownerField: "senderId"}, {allow: owner, ownerField: "recipientId"}]) {
+  id: ID!
+  conversationId: ID!
+  senderId: ID!
+  recipientId: ID!
+  content: String!
+  timestamp: AWSDateTime!
+  status: MessageStatus!
+  conversation: Conversation @belongsTo
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  OTHER
+}
+
+enum LocationPrivacy {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+enum LocationType {
+  BAR
+  RESTAURANT
+  CAFE
+  CLUB
+}
+
+enum CheckInStatus {
+  ACTIVE
+  CHECKED_OUT
+  EXPIRED
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}

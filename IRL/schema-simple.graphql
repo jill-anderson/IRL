@@ -1,0 +1,75 @@
+# Simple GraphQL Schema for IRL Dating App (Standard AppSync)
+
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  displayName: String!
+  bio: String
+  profilePhotoUrl: String
+  galleryPhotoUrls: [String]
+  birthDate: AWSDateTime!
+  gender: Gender!
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  locationPrivacy: LocationPrivacy!
+  lastActiveAt: AWSDateTime!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+  OTHER
+}
+
+enum LocationPrivacy {
+  PUBLIC
+  FRIENDS_ONLY
+  PRIVATE
+}
+
+type Query {
+  getUser(id: ID!): User
+  getUserByEmail(email: String!): User
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User
+  updateUser(input: UpdateUserInput!): User
+}
+
+input CreateUserInput {
+  id: ID!
+  email: String!
+  username: String!
+  displayName: String!
+  gender: Gender!
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  profilePhotoUrl: String
+  galleryPhotoUrls: [String]
+  birthDate: AWSDateTime!
+  locationPrivacy: LocationPrivacy!
+}
+
+input UpdateUserInput {
+  id: ID!
+  displayName: String
+  bio: String
+  gender: Gender
+  interestedIn: Gender
+  jobTitle: String
+  religiousAffiliation: String
+  locationPrivacy: LocationPrivacy
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

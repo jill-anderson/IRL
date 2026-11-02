@@ -1,0 +1,550 @@
+# this is an auto generated file. This will be overwritten
+
+mutation CreateLocation(
+  $input: CreateLocationInput!
+  $condition: ModelLocationConditionInput
+) {
+  createLocation(input: $input, condition: $condition) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateLocation(
+  $input: UpdateLocationInput!
+  $condition: ModelLocationConditionInput
+) {
+  updateLocation(input: $input, condition: $condition) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteLocation(
+  $input: DeleteLocationInput!
+  $condition: ModelLocationConditionInput
+) {
+  deleteLocation(input: $input, condition: $condition) {
+    id
+    name
+    type
+    address
+    latitude
+    longitude
+    geofenceId
+    radius
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateUser(
+  $input: CreateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  createUser(input: $input, condition: $condition) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+mutation DeleteUser(
+  $input: DeleteUserInput!
+  $condition: ModelUserConditionInput
+) {
+  deleteUser(input: $input, condition: $condition) {
+    id
+    email
+    username
+    displayName
+    bio
+    profilePhotoUrl
+    birthDate
+    gender
+    locationPrivacy
+    lastActiveAt
+    checkIns {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+    __typename
+  }
+}
+
+mutation CreateCheckIn(
+  $input: CreateCheckInInput!
+  $condition: ModelCheckInConditionInput
+) {
+  createCheckIn(input: $input, condition: $condition) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+mutation UpdateCheckIn(
+  $input: UpdateCheckInInput!
+  $condition: ModelCheckInConditionInput
+) {
+  updateCheckIn(input: $input, condition: $condition) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+mutation DeleteCheckIn(
+  $input: DeleteCheckInInput!
+  $condition: ModelCheckInConditionInput
+) {
+  deleteCheckIn(input: $input, condition: $condition) {
+    id
+    userId
+    locationId
+    checkInTime
+    checkOutTime
+    status
+    autoCheckIn
+    user {
+      id
+      email
+      username
+      displayName
+      bio
+      profilePhotoUrl
+      birthDate
+      gender
+      locationPrivacy
+      lastActiveAt
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+    location {
+      id
+      name
+      type
+      address
+      latitude
+      longitude
+      geofenceId
+      radius
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userCheckInsId
+    locationCheckInsId
+    owner
+    __typename
+  }
+}
+
+mutation CreateConversation(
+  $input: CreateConversationInput!
+  $condition: ModelConversationConditionInput
+) {
+  createConversation(input: $input, condition: $condition) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateConversation(
+  $input: UpdateConversationInput!
+  $condition: ModelConversationConditionInput
+) {
+  updateConversation(input: $input, condition: $condition) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteConversation(
+  $input: DeleteConversationInput!
+  $condition: ModelConversationConditionInput
+) {
+  deleteConversation(input: $input, condition: $condition) {
+    id
+    participant1Id
+    participant2Id
+    participant1Name
+    participant2Name
+    lastMessageText
+    lastMessageTime
+    unreadCount1
+    unreadCount2
+    messages {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateMessage(
+  $input: CreateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  createMessage(input: $input, condition: $condition) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}
+
+mutation UpdateMessage(
+  $input: UpdateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  updateMessage(input: $input, condition: $condition) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}
+
+mutation DeleteMessage(
+  $input: DeleteMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  deleteMessage(input: $input, condition: $condition) {
+    id
+    conversationId
+    senderId
+    recipientId
+    content
+    timestamp
+    status
+    conversation {
+      id
+      participant1Id
+      participant2Id
+      participant1Name
+      participant2Name
+      lastMessageText
+      lastMessageTime
+      unreadCount1
+      unreadCount2
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    conversationMessagesId
+    __typename
+  }
+}

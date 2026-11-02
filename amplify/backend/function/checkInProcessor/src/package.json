@@ -1,0 +1,16 @@
+{
+  "name": "checkinprocessor",
+  "version": "1.0.0",
+  "description": "Lambda function to process check-ins",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}

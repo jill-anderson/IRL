@@ -1,0 +1,11 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-irl-dev-auth-role",
+      "UnauthRoleName": "amplify-irl-dev-unauth-role",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-irl-dev-deployment"
+    }
+  },
+  "frontend": "ios"
+}

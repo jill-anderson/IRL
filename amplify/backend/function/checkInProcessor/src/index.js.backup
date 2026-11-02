@@ -1,0 +1,159 @@
+/**
+ * Check-In Processor Lambda Function
+ * Handles automatic and manual check-ins for users at locations
+ */
+
+const AWS = require('aws-sdk');
+const dynamodb = new AWS.DynamoDB.DocumentClient();
+const { v4: uuidv4 } = require('uuid');
+
+const USERS_TABLE = process.env.USERS_TABLE;
+const CHECKINS_TABLE = process.env.CHECKINS_TABLE;
+const LOCATIONS_TABLE = process.env.LOCATIONS_TABLE;
+
+/**
+ * Main Lambda handler
+ */
+exports.handler = async (event) => {
+  console.log('CheckInProcessor invoked:', JSON.stringify(event, null, 2));
+
+  try {
+    const { locationId } = event.arguments;
+    const userId = event.identity.sub; // Cognito user ID
+    const isAutoCheckIn = event.info.fieldName === 'autoCheckIn';
+
+    // Validate location exists
+    const location = await getLocation(locationId);
+    if (!location) {
+      throw new Error('Location not found');
+    }
+
+    // Check if user already has an active check-in
+    const existingCheckIn = await getActiveCheckIn(userId);
+    if (existingCheckIn) {
+      // Auto check-out from previous location
+      await checkOutUser(existingCheckIn.id);
+    }
+
+    // Create new check-in
+    const checkIn = await createCheckIn(userId, locationId, isAutoCheckIn);
+
+    // Update user's last active timestamp
+    await updateUserLastActive(userId);
+
+    console.log('Check-in created successfully:', checkIn.id);
+
+    return checkIn;
+  } catch (error) {
+    console.error('Error in checkInProcessor:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get location by ID
+ */
+async function getLocation(locationId) {
+  const params = {
+    TableName: LOCATIONS_TABLE,
+    Key: { id: locationId }
+  };
+
+  const result = await dynamodb.get(params).promise();
+  return result.Item;
+}
+
+/**
+ * Get user's active check-in
+ */
+async function getActiveCheckIn(userId) {
+  const params = {
+    TableName: CHECKINS_TABLE,
+    IndexName: 'byUser',
+    KeyConditionExpression: 'userId = :userId',
+    FilterExpression: '#status = :status',
+    ExpressionAttributeNames: {
+      '#status': 'status'
+    },
+    ExpressionAttributeValues: {
+      ':userId': userId,
+      ':status': 'ACTIVE'
+    },
+    Limit: 1
+  };
+
+  const result = await dynamodb.query(params).promise();
+  return result.Items && result.Items.length > 0 ? result.Items[0] : null;
+}
+
+/**
+ * Check out user from previous location
+ */
+async function checkOutUser(checkInId) {
+  const now = new Date().toISOString();
+
+  const params = {
+    TableName: CHECKINS_TABLE,
+    Key: { id: checkInId },
+    UpdateExpression: 'SET checkOutTime = :checkOutTime, #status = :status, updatedAt = :updatedAt',
+    ExpressionAttributeNames: {
+      '#status': 'status'
+    },
+    ExpressionAttributeValues: {
+      ':checkOutTime': now,
+      ':status': 'CHECKED_OUT',
+      ':updatedAt': now
+    }
+  };
+
+  await dynamodb.update(params).promise();
+}
+
+/**
+ * Create new check-in
+ */
+async function createCheckIn(userId, locationId, autoCheckIn) {
+  const now = new Date().toISOString();
+  const ttl = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60); // 30 days from now
+
+  const checkIn = {
+    id: uuidv4(),
+    userId,
+    locationId,
+    checkInTime: now,
+    checkOutTime: null,
+    status: 'ACTIVE',
+    autoCheckIn,
+    ttl,
+    createdAt: now,
+    updatedAt: now
+  };
+
+  const params = {
+    TableName: CHECKINS_TABLE,
+    Item: checkIn
+  };
+
+  await dynamodb.put(params).promise();
+
+  return checkIn;
+}
+
+/**
+ * Update user's last active timestamp
+ */
+async function updateUserLastActive(userId) {
+  const now = new Date().toISOString();
+
+  const params = {
+    TableName: USERS_TABLE,
+    Key: { id: userId },
+    UpdateExpression: 'SET lastActiveAt = :lastActiveAt, updatedAt = :updatedAt',
+    ExpressionAttributeValues: {
+      ':lastActiveAt': now,
+      ':updatedAt': now
+    }
+  };
+
+  await dynamodb.update(params).promise();
+}
